@@ -26,4 +26,4 @@ jobs:
       - name: Run Code Coverage
         run: yarn nyc report
       - name: Check nyc code coverage
-        run: yarn nyc check-coverage --statements 100 --lines 10 --functions 100 --branches 100
+        run: yarn nyc check-coverage --statements 100 --lines 100 --functions 100 --branches 100
