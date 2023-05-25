@@ -27,14 +27,3 @@ jobs:
         run: yarn nyc report
       - name: Check nyc code coverage
         run: yarn nyc check-coverage --statements 100 --lines 10 --functions 100 --branches 100
-      - name: Get coverage report
-        run: |
-          COVERAGE_PERCENT=$(cat coverage-report.txt | grep 'Overall coverage' | grep -oE '[0-9]+\.[0-9]+')
-          echo "Code coverage: $COVERAGE_PERCENT%"
-
-      - name: Fail if coverage is below threshold
-        run: |
-          if [[ ${COVERAGE_PERCENT%.*} -lt 80 ]]; then
-            echo "Code coverage is below the threshold. Please increase test coverage."
-            exit 1
-          fi
