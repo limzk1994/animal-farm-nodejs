@@ -26,4 +26,16 @@ jobs:
       - name: Run Code Coverage
         run: yarn nyc report
       - name: Check nyc code coverage
-        run: yarn nyc check-coverage --statements 100 --lines 10 --functions 100 --branches 100
+        run: yarn nyc --reporter=lcov --report-dir=coverage check-coverage --statements 100 --lines 10 --functions 100 --branches 100 --all
+      - name: Move coverage report
+        run: mv coverage/lcov-report/coverage.txt coverage-report.txt
+      - name: Get coverage report
+        run: |
+          COVERAGE_PERCENT=$(cat coverage-report.txt | grep 'Overall coverage' | grep -oE '[0-9]+\.[0-9]+')
+          echo "Code coverage: $COVERAGE_PERCENT%"
+      - name: Fail if tests or coverage fail
+        run: |
+          if [[ ${{ job.status }} == 'failure' || ${COVERAGE_PERCENT%.*} -lt 80 ]]; then
+            echo "Tests or code coverage failed. Please fix the issues before merging."
+            exit 1
+          fi
